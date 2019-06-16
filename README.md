@@ -1,2 +1,2 @@
-# POS-System-Angular-Java
-simple pos system using angular and java servlets
+# POS-System-Servlet-Java
+simple pos system java servlets
