@@ -7,6 +7,7 @@ import lk.ijse.absd.servlets.servlet.other.JsonResponseGenerator;
 import lk.ijse.absd.servlets.servlet.other.PojoGenerator;
 import lk.ijse.absd.servlets.util.Constaants;
 
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -30,7 +31,41 @@ public class OrdersServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doGet(req, resp);
+        try {
+            boolean operation = req.getHeader("operation").isEmpty();
+        } catch (NullPointerException n){
+            resp.sendError(HttpServletResponse.SC_BAD_REQUEST,"No operation header is presented ! ");
+            return;
+        }
+        switch (req.getHeader("operation")){
+            case "getAll":
+                try {
+                    resp.setContentType("application/json");
+                    JsonArray orderDTOList = new JsonResponseGenerator().getByOrderDTOList(orderService.getAll());
+                    resp.getWriter().println(orderDTOList);
+                }catch (RuntimeException r){
+                    r.printStackTrace();
+                    resp.sendError(HttpServletResponse.SC_EXPECTATION_FAILED,r.getMessage());
+                }
+                break;
+            case "search":
+                try {
+                    resp.setContentType("application/json");
+                    OrderDTO orderDTO = orderService.search(Integer.parseInt(req.getParameter("oid")));
+                    if (orderDTO == null) {
+                        resp.sendError(HttpServletResponse.SC_NOT_FOUND, "No order for given id !");
+                        return;
+                    }
+                    JsonObject byCustomerDTO = new JsonResponseGenerator().getByOrderDTO(orderDTO);
+                    resp.getWriter().println(byCustomerDTO);
+                }catch (RuntimeException r){
+                    r.printStackTrace();
+                    resp.sendError(HttpServletResponse.SC_EXPECTATION_FAILED,r.getMessage());
+                }
+                break;
+            default:
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Get Operation");
+        }
     }
 
     @Override

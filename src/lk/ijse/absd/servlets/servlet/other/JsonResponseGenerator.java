@@ -2,6 +2,7 @@ package lk.ijse.absd.servlets.servlet.other;
 
 import lk.ijse.absd.servlets.dto.CustomerDTO;
 import lk.ijse.absd.servlets.dto.ItemDTO;
+import lk.ijse.absd.servlets.dto.OrderDTO;
 
 import javax.json.*;
 import java.util.List;
@@ -44,6 +45,23 @@ public class JsonResponseGenerator {
         JsonArrayBuilder jsonArrayBuilder=Json.createArrayBuilder();
         itemDTOS.forEach(ItemDTO -> {
             jsonArrayBuilder.add(getByItemDTO(ItemDTO));
+        });
+        return jsonArrayBuilder.build();
+    }
+
+    public JsonObject getByOrderDTO(OrderDTO orderDTO){
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        objectBuilder.add("oid",orderDTO.getOid());
+        objectBuilder.add("date",orderDTO.getDate().toString());
+        objectBuilder.add("total",orderDTO.getTotal());
+        objectBuilder.add("cid",orderDTO.getCid());
+        return objectBuilder.build();
+    }
+
+    public JsonArray getByOrderDTOList(List<OrderDTO> orderDTOS){
+        JsonArrayBuilder jsonArrayBuilder=Json.createArrayBuilder();
+        orderDTOS.forEach(OrderDTO -> {
+            jsonArrayBuilder.add(getByOrderDTO(OrderDTO));
         });
         return jsonArrayBuilder.build();
     }

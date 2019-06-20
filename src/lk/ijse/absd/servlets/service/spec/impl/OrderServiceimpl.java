@@ -14,7 +14,9 @@ import lk.ijse.absd.servlets.repository.spec.OrderRepo;
 import lk.ijse.absd.servlets.service.spec.OrderService;
 import lk.ijse.absd.servlets.util.CrudUtil;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
 
+import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -112,6 +114,13 @@ public class OrderServiceimpl implements OrderService {
 
     @Override
     public List<OrderDTO> getAll() {
-        return null;
+        try {
+            List<Orders> all = orderRepo.getAll();
+            Type listType= new TypeToken<List<OrderDTO>>(){}.getType();
+            return modelMapper.map(all,listType);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
     }
 }
