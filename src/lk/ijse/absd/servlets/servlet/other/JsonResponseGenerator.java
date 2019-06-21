@@ -55,6 +55,7 @@ public class JsonResponseGenerator {
         objectBuilder.add("date",orderDTO.getDate().toString());
         objectBuilder.add("total",orderDTO.getTotal());
         objectBuilder.add("cid",orderDTO.getCid());
+        objectBuilder.add("name",orderDTO.getName());
         return objectBuilder.build();
     }
 

@@ -1,5 +1,6 @@
 package lk.ijse.absd.servlets.repository.spec.impl;
 
+import lk.ijse.absd.servlets.entity.CustomEnity;
 import lk.ijse.absd.servlets.entity.Orders;
 import lk.ijse.absd.servlets.repository.spec.OrderRepo;
 import lk.ijse.absd.servlets.util.CrudUtil;
@@ -91,4 +92,23 @@ public class OrderRepoimpl implements OrderRepo {
         }
         return 0;
     }
+
+    @Override
+    public List<CustomEnity> getAllWithCustName() throws SQLException {
+        CrudUtil crudUtil=new CrudUtil();
+        List<CustomEnity>ordersList=new ArrayList<>();
+        ResultSet resultSet = crudUtil.executeQuery("SELECT o.*, c.name FROM orders o, customer c where o.cid=c.cid;");
+        while (resultSet.next()){
+            CustomEnity orders=new CustomEnity();
+            orders.setOid(resultSet.getInt("oid"));
+            orders.setDate(resultSet.getDate("date"));
+            orders.setTotal(resultSet.getDouble("total"));
+            orders.setCid(resultSet.getInt("cid"));
+            orders.setName(resultSet.getString("name"));
+            ordersList.add( orders);
+        }
+        crudUtil.closeConnection();
+        return ordersList;
+    }
+
 }

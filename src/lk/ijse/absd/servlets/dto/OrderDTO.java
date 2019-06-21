@@ -10,7 +10,17 @@ public class OrderDTO {
     private int cid;
     private List<OrderDetailDTO> orderDetailDTOS;
 
+    private String name;
+
     public OrderDTO() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getCid() {

@@ -3,10 +3,7 @@ package lk.ijse.absd.servlets.service.spec.impl;
 import lk.ijse.absd.servlets.db.DBConnection;
 import lk.ijse.absd.servlets.dto.OrderDTO;
 import lk.ijse.absd.servlets.dto.OrderDetailDTO;
-import lk.ijse.absd.servlets.entity.Item;
-import lk.ijse.absd.servlets.entity.OrderDetail_PK;
-import lk.ijse.absd.servlets.entity.OrderDetails;
-import lk.ijse.absd.servlets.entity.Orders;
+import lk.ijse.absd.servlets.entity.*;
 import lk.ijse.absd.servlets.repository.other.RepoFactory;
 import lk.ijse.absd.servlets.repository.spec.ItemRepo;
 import lk.ijse.absd.servlets.repository.spec.OrderDetailRepo;
@@ -118,6 +115,18 @@ public class OrderServiceimpl implements OrderService {
             List<Orders> all = orderRepo.getAll();
             Type listType= new TypeToken<List<OrderDTO>>(){}.getType();
             return modelMapper.map(all,listType);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<OrderDTO> getAllWithCustName() {
+        try {
+            List<CustomEnity> allWithCustName = orderRepo.getAllWithCustName();
+            Type listType= new TypeToken<List<OrderDTO>>(){}.getType();
+            return modelMapper.map(allWithCustName,listType);
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
