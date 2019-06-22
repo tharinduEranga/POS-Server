@@ -3,6 +3,7 @@ package lk.ijse.absd.servlets.servlet.other;
 import lk.ijse.absd.servlets.dto.CustomerDTO;
 import lk.ijse.absd.servlets.dto.ItemDTO;
 import lk.ijse.absd.servlets.dto.OrderDTO;
+import lk.ijse.absd.servlets.dto.OrderDetailDTO;
 
 import javax.json.*;
 import java.util.List;
@@ -55,7 +56,9 @@ public class JsonResponseGenerator {
         objectBuilder.add("date",orderDTO.getDate().toString());
         objectBuilder.add("total",orderDTO.getTotal());
         objectBuilder.add("cid",orderDTO.getCid());
-        objectBuilder.add("name",orderDTO.getName());
+        if(orderDTO.getName()!=null){
+            objectBuilder.add("name",orderDTO.getName());
+        }
         return objectBuilder.build();
     }
 
@@ -63,6 +66,23 @@ public class JsonResponseGenerator {
         JsonArrayBuilder jsonArrayBuilder=Json.createArrayBuilder();
         orderDTOS.forEach(OrderDTO -> {
             jsonArrayBuilder.add(getByOrderDTO(OrderDTO));
+        });
+        return jsonArrayBuilder.build();
+    }
+
+    public JsonObject getByOrderDetailDTO(OrderDetailDTO orderDetailDTO){
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+        objectBuilder.add("code",orderDetailDTO.getCode());
+        objectBuilder.add("qty",orderDetailDTO.getQty());
+        objectBuilder.add("oid",orderDetailDTO.getOid());
+        objectBuilder.add("unitPrice",orderDetailDTO.getUnitPrice());
+        return objectBuilder.build();
+    }
+
+    public JsonArray getByOrderDetailDTOList(List<OrderDetailDTO> orderDetailDTOS){
+        JsonArrayBuilder jsonArrayBuilder=Json.createArrayBuilder();
+        orderDetailDTOS.forEach(orderDetailDTO  -> {
+            jsonArrayBuilder.add(getByOrderDetailDTO(orderDetailDTO));
         });
         return jsonArrayBuilder.build();
     }

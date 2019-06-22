@@ -24,6 +24,27 @@ public class OrderDetailRepoimpl implements OrderDetailRepo {
     }
 
     @Override
+    public List<OrderDetails> getByOrder(int oid) throws SQLException {
+        CrudUtil crudUtil= new CrudUtil();
+        List<OrderDetails>ordersList=new ArrayList<>();
+        ResultSet resultSet = crudUtil.executeQuery("SELECT * FROM orderdetails WHERE oid=?",oid);
+        while (resultSet.next()){
+            OrderDetails orderDetails=new OrderDetails();
+            orderDetails.setOrderDetail_pk(
+                    new OrderDetail_PK(
+                            resultSet.getInt("code"),
+                            resultSet.getInt("oid")
+                    )
+            );
+            orderDetails.setQty(resultSet.getDouble("qty"));
+            orderDetails.setUnitPrice(resultSet.getDouble("unitPrice"));
+            ordersList.add( orderDetails);
+        }
+        crudUtil.closeConnection();
+        return ordersList;
+    }
+
+    @Override
     public boolean add(OrderDetails od) throws SQLException {
         CrudUtil crudUtil= new CrudUtil(connection);
         return crudUtil.executeUpdate("INSERT INTO orderdetails VALUES(?,?,?,?)",

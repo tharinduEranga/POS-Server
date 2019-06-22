@@ -73,6 +73,17 @@ public class OrdersServlet extends HttpServlet {
                     resp.sendError(HttpServletResponse.SC_EXPECTATION_FAILED,r.getMessage());
                 }
                 break;
+            case "orderDetailsByOrder":
+                try {
+                    int oid = Integer.parseInt(req.getParameter("oid"));
+                    resp.setContentType("application/json");
+                    JsonArray orderDTOList = new JsonResponseGenerator().getByOrderDetailDTOList(orderService.getByOrder(oid));
+                    resp.getWriter().println(orderDTOList);
+                }catch (RuntimeException r){
+                    r.printStackTrace();
+                    resp.sendError(HttpServletResponse.SC_EXPECTATION_FAILED,r.getMessage());
+                }
+                break;
             default:
                 resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid Get Operation");
         }

@@ -16,6 +16,7 @@ import org.modelmapper.TypeToken;
 import java.lang.reflect.Type;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -128,6 +129,26 @@ public class OrderServiceimpl implements OrderService {
             Type listType= new TypeToken<List<OrderDTO>>(){}.getType();
             return modelMapper.map(allWithCustName,listType);
         } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<OrderDetailDTO> getByOrder(int oid) {
+        try {
+            List<OrderDetailDTO>orderDetailDTOS=new ArrayList<>();
+            List<OrderDetails> byOrder = orderDetailRepo.getByOrder(oid);
+            byOrder.forEach(orderDetails -> {
+                OrderDetailDTO orderDetailDTO=new OrderDetailDTO();
+                orderDetailDTO.setCode(orderDetails.getOrderDetail_pk().getCode());
+                orderDetailDTO.setOid(oid);
+                orderDetailDTO.setQty(orderDetails.getQty());
+                orderDetailDTO.setUnitPrice(orderDetails.getUnitPrice());
+                orderDetailDTOS.add(orderDetailDTO);
+            });
+            return orderDetailDTOS;
+        }catch (Exception e){
             e.printStackTrace();
             throw new RuntimeException(e.getMessage());
         }
